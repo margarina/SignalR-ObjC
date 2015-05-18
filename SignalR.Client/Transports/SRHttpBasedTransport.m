@@ -170,14 +170,42 @@
         [queryStringBuilder appendFormat:@"&%@",customQuery];
     }
     
+#warning MODIFICATION
+    [queryStringBuilder replaceOccurrencesOfString:@"/"
+                                        withString:@"%2F"
+                                           options:0
+                                             range:NSMakeRange(0, [queryStringBuilder length])];
+    
+    [queryStringBuilder replaceOccurrencesOfString:@"+"
+                                        withString:@"%2B"
+                                           options:0
+                                             range:NSMakeRange(0, [queryStringBuilder length])];
+    
     return queryStringBuilder;
 }
 
 //?transport=<transportname>&connectionToken=<connectionToken><customquerystring>
 - (NSString *)sendQueryString:(id <SRConnectionInterface>)connection {
+
+#warning MODIFICATION
+    
+    NSString *token = [connection.connectionToken stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding];
+    NSMutableString *mToken = [token mutableCopy];
+
+    [mToken replaceOccurrencesOfString:@"/"
+                            withString:@"%2F"
+                               options:0
+                                 range:NSMakeRange(0, [mToken length])];
+    [mToken replaceOccurrencesOfString:@"+"
+                            withString:@"%2B"
+                               options:0
+                                 range:NSMakeRange(0, [mToken length])];
+    
+    return [NSString stringWithFormat:@"?transport=%@&connectionToken=%@%@",_transport, mToken, [SRHttpBasedTransport getCustomQueryString:connection]];
+    /*
     return [NSString stringWithFormat:@"?transport=%@&connectionToken=%@%@",_transport,
             [connection.connectionToken stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding],
-            [SRHttpBasedTransport getCustomQueryString:connection]];
+            [SRHttpBasedTransport getCustomQueryString:connection]];*/
 }
 
 - (void)processResponse:(id <SRConnectionInterface>)connection response:(NSString *)response timedOut:(BOOL *)timedOut disconnected:(BOOL *)disconnected {

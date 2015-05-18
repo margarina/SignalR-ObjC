@@ -200,6 +200,9 @@ void (^prepareRequest)(id);
 }
 
 - (void)disconnect {
+#warning MODIFICATION !!!!!!!!!!!!!!!!!
+    return;
+    
     if (self.state != disconnected) {
         
         [[NSNotificationCenter defaultCenter] postNotificationName:SRConnectionDidDisconnect object:self];
