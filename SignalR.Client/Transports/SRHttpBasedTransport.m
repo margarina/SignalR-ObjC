@@ -191,7 +191,7 @@
     
     NSString *token = [connection.connectionToken stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding];
     NSMutableString *mToken = [token mutableCopy];
-
+    
     [mToken replaceOccurrencesOfString:@"/"
                             withString:@"%2F"
                                options:0
