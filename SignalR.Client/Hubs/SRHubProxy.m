@@ -150,7 +150,7 @@
         hubData.state = _state;
     }
     
-    [_connection send:hubData];
+    [_connection send:hubData completionHandler:block];
 }
 
 - (NSString *)description {     
