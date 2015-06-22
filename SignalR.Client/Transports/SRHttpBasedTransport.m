@@ -270,7 +270,7 @@
 }
 
 + (NSString *)getCustomQueryString:(id <SRConnectionInterface>)connection {
-    return (connection.queryString == nil || [connection.queryString isEqualToString:@""] == YES) ? @"" : [@"&" stringByAppendingString:connection.queryString] ;
+    return (connection.queryString == nil || [connection.queryString isEqualToString:@""] == YES) ? @"" : [@"?" stringByAppendingString:connection.queryString] ;
 }
 
 @end
