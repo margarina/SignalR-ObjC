@@ -272,10 +272,10 @@
 + (NSString *)getCustomQueryString:(id <SRConnectionInterface>)connection asFirst:(BOOL)asFirst {
     if (asFirst)
     {
-        return (connection.queryString == nil || [connection.queryString isEqualToString:@""] == YES) ? @"" : [@"?" stringByAppendingString:connection.queryString] ;
+        return (connection.queryString == nil || [connection.queryString isEqualToString:@""] == YES) ? @"" : [@"?" stringByAppendingString:connection.queryString];
     }
     
-    return (connection.queryString == nil || [connection.queryString isEqualToString:@""] == YES) ? @"" : [@"&" stringByAppendingString:connection.queryString] ;
+    return (connection.queryString == nil || [connection.queryString isEqualToString:@""] == YES) ? @"" : [@"&" stringByAppendingString:connection.queryString];
 }
 
 @end
