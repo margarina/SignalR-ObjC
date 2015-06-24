@@ -270,12 +270,8 @@
 }
 
 + (NSString *)getCustomQueryString:(id <SRConnectionInterface>)connection asFirst:(BOOL)asFirst {
-    if (asFirst)
-    {
-        return (connection.queryString == nil || [connection.queryString isEqualToString:@""] == YES) ? @"" : [@"?" stringByAppendingString:connection.queryString];
-    }
-    
-    return (connection.queryString == nil || [connection.queryString isEqualToString:@""] == YES) ? @"" : [@"&" stringByAppendingString:connection.queryString];
+    NSString *first = asFirst ? @"?" : @"&";
+    return (connection.queryString == nil || [connection.queryString isEqualToString:@""] == YES) ? @"" : [first stringByAppendingString:connection.queryString];
 }
 
 @end
