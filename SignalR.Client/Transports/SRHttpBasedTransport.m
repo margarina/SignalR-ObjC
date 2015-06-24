@@ -29,7 +29,7 @@
 
 @interface SRHttpBasedTransport()
 
-+ (NSString *)getCustomQueryString:(id <SRConnectionInterface>)connection;
++ (NSString *)getCustomQueryString:(id <SRConnectionInterface>)connection asFirst:(BOOL)asFirst;
 
 @end
 
@@ -53,7 +53,7 @@
 
 + (void)getNegotiationResponse:(id <SRHttpClient>)httpClient connection:(id <SRConnectionInterface>)connection completionHandler:(void (^)(SRNegotiationResponse *response))block {
     NSString *negotiateUrl = [connection.url stringByAppendingString:@"negotiate"];
-    negotiateUrl = [negotiateUrl stringByAppendingString:[self getCustomQueryString:connection]];
+    negotiateUrl = [negotiateUrl stringByAppendingString:[self getCustomQueryString:connection asFirst:YES]];
     
     [httpClient get:negotiateUrl requestPreparer:^(id<SRRequest> request) {
         [request setTimeoutInterval:30];
@@ -164,7 +164,7 @@
         [queryStringBuilder appendFormat:@"&connectionData=%@",[data stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding]];
     }
 
-    NSString *customQuery = [SRHttpBasedTransport getCustomQueryString:connection];
+    NSString *customQuery = [SRHttpBasedTransport getCustomQueryString:connection asFirst:NO];
     
     if (customQuery != nil && ![customQuery isEqualToString:@""]) {
         [queryStringBuilder appendFormat:@"&%@",customQuery];
@@ -201,7 +201,7 @@
                                options:0
                                  range:NSMakeRange(0, [mToken length])];
     
-    return [NSString stringWithFormat:@"?transport=%@&connectionToken=%@%@",_transport, mToken, [SRHttpBasedTransport getCustomQueryString:connection]];
+    return [NSString stringWithFormat:@"?transport=%@&connectionToken=%@%@",_transport, mToken, [SRHttpBasedTransport getCustomQueryString:connection asFirst:NO]];
     /*
     return [NSString stringWithFormat:@"?transport=%@&connectionToken=%@%@",_transport,
             [connection.connectionToken stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding],
@@ -269,8 +269,13 @@
     }
 }
 
-+ (NSString *)getCustomQueryString:(id <SRConnectionInterface>)connection {
-    return (connection.queryString == nil || [connection.queryString isEqualToString:@""] == YES) ? @"" : [@"?" stringByAppendingString:connection.queryString] ;
++ (NSString *)getCustomQueryString:(id <SRConnectionInterface>)connection asFirst:(BOOL)asFirst {
+    if (asFirst)
+    {
+        return (connection.queryString == nil || [connection.queryString isEqualToString:@""] == YES) ? @"" : [@"?" stringByAppendingString:connection.queryString] ;
+    }
+    
+    return (connection.queryString == nil || [connection.queryString isEqualToString:@""] == YES) ? @"" : [@"&" stringByAppendingString:connection.queryString] ;
 }
 
 @end
